@@ -1,0 +1,109 @@
+COMP1202 Coursework - ZooSim
+Huw C B Jones (hcbj1g15)
+=========================================================================================
+=    _____ ____  __  __ _____  __ ___   ___ ___    ______           _____ _             =
+=   / ____/ __ \|  \/  |  __ \/_ |__ \ / _ \__ \  |___  /          / ____(_)            =
+=  | |   | |  | | \  / | |__) || |  ) | | | | ) |    / / ___   ___| (___  _ _ __ ___    =
+=  | |   | |  | | |\/| |  ___/ | | / /| | | |/ /    / / / _ \ / _ \\___ \| | '_ ` _ \   =
+=  | |___| |__| | |  | | |     | |/ /_| |_| / /_   / /_| (_) | (_) |___) | | | | | | |  =
+=   \_____\____/|_|  |_|_|     |_|____|\___/____| /_____\___/ \___/_____/|_|_| |_| |_|  =
+=========================================================================================
+
+
+PARTS:
+    All
+
+INSTRUCTIONS:
+    1. Compile. (You might have to compile each file individually, and if you have to, I feel your pain, but use an IDE)
+       I think there are 40 classes (atm) with more probably coming. It does compile, because I've run it, so I have
+       included a jar of my project. The specification specifically says do not include class files, but even though a
+       jar is a compressed java archive of class files with a manifest to specify the class with the main method, the
+       file type is still .jar, so I'm not breaking the spec!
+    2. Call "java Zoo"
+       For help use "java Zoo -h"
+
+   NB: You will probably need to add the path to the apache commons math library, otherwise you'll get a ClassNotFound
+       exception if you run my extension.
+
+       You'll probably end up using java -cp "path/to/class/root/of/my/coursework;lib/commons-math3-3.5.jar;" Zoo
+       But if you want it easier, use java -cp "lib/commons-math3-3.5.jar;" -jar Zoo.jar
+
+CLI ARGS:
+  -f, --file [FILE]     Specifies file, [FILE], to load simulation config.
+  -h, --help            Prints this help message.
+  -n, --number [INT]    Processes [INT] number of months.
+  -o, --output [FILE]   When simulation is complete, saves zoo state to [FILE]. Will overwrite existing files.
+                        If no file is specified, will output to stdout. Implies -b, requires -n.
+  -v, --version         Prints version.
+
+Instructions are provided as needed, but for making your life easy, call: "java Zoo -f [FILE]" :-)
+
+  ______      _                 _
+ |  ____|    | |               (_)
+ | |__  __  _| |_ ___ _ __  ___ _  ___  _ __  ___
+ |  __| \ \/ / __/ _ \ '_ \/ __| |/ _ \| '_ \/ __|
+ | |____ >  <| ||  __/ | | \__ \ | (_) | | | \__ \
+ |______/_/\_\\__\___|_| |_|___/_|\___/|_| |_|___/
+
+ 1) After loading a configuration file, the Simulation can be run for x amount of months, as specified from the CLI.
+ 2) After running for x months, the zoo config can either be printed to stdout, or saved to a file.
+ 3) When an animal's health reaches 0, any action performed throws an AnimalDeadException, any dead animals are removed
+    from the enclosure the next month.
+ 4) Food is now an object (as it should have been to start with, but spec).
+ 5) Animals die according to life expectancy and is modelled by a normal distribution curve where μ = life expectancy,
+    and σ^2 = sqrt(μ)
+ 6) Animals now have partners and can mate/reproduce. This is provided by ZooSim.Interfaces.iReproduce.
+    If an animal does not have a partner, if it is female, they have to wait for a male to request here to become her
+    mate.
+    If they are male, the male finds an un-mated female in the enclosure and asks her to be his mate.
+    The pair of animals will become each others mate based on a probability.
+    Where:
+        r ∈ Z && r ∈ [0, 100]       - A random integer
+        h ∈ Z && h ∈ [0, 10]        - Health of the female animal
+    If P(r < 10h), then the animals will become mates.
+
+    For a female animal to become pregnant, its health must be greater than 8.
+    When an animal is pregnant, its health will decrease by 1 every month regardless of the food eaten. This simulates
+    the animal carrying the extra load.
+    Animals now have a gestation period (in months) that gives the span of pregnancy. After the gestation period elapses
+    the baby animal is "born", or if the enclosure is full, the animal has a "miscarriage".
+ 7) Animal life expectancies have been updated to reflect the gestation period (because I actually googled the gestation
+    period and didn't make it up, unlike the life expectancy *cough cough*).
+ 8) ZooSim.Enclosures:
+        Enclosure::addAllAnimals(Animal[]):
+          This is now a thing. I was lazy and cba to make consecutive calls to Enclosure::add(Animal) and also
+          ArrayList::addAll(Object[]) exists too so...
+ 9) ZooSim.Animal:
+        Animal::isFemale()  - laziness
+        Animal::isMale()    - laziness
+        Animal::isDead()    - laziness
+10) ZooSim.Animal::treat(Zookeeper) is now overloaded with:
+        Animal::treat(Animal).
+    This allows an animals mate to treat their partner every month (*cue awwwwwwww*)
+
+              _     _ _ _   _                   _   _____        __
+     /\      | |   | (_) | (_)                 | | |_   _|      / _|
+    /  \   __| | __| |_| |_ _  ___  _ __   __ _| |   | |  _ __ | |_ ___
+   / /\ \ / _` |/ _` | | __| |/ _ \| '_ \ / _` | |   | | | '_ \|  _/ _ \
+  / ____ \ (_| | (_| | | |_| | (_) | | | | (_| | |  _| |_| | | | || (_) |
+ /_/    \_\__,_|\__,_|_|\__|_|\___/|_| |_|\__,_|_| |_____|_| |_|_| \___/
+
+JAVADOC:
+If you notice, all my code is javadoc-ced and I have generated this for you.
+zoo.zip/javadoc/index.html is the main file for viewing the javadoc.
+
+CODE:
+This coursework contains code that I  have previously written for 2 Space Cadets challenges.
+This class has not been used for submission elsewhere.
+The challenges are:
+* https://secure.ecs.soton.ac.uk/student/wiki/w/COMP1202/Space_Cadets/SCChallengeBareBones
+* https://secure.ecs.soton.ac.uk/student/wiki/w/COMP1202/Space_Cadets/SCChallengeBareBonesExtended
+For these challenges I wrote an interpreter/tokeniser.
+I have reused this class, but have extended it further to include Tokens that I didn't need for BareBones.
+I released this code on the internet with no licence. It is available on GitHub.
+https://github.com/huwcbjones/SpaceCadets/tree/master/Challenge%205/src/com/huwcbjones/BareBonesInterpreter
+
+EXTRAS:
+I have been using a private github repo to sync my code (thanks Github Student!), so I have included my commit messages.
+I thought it would make you smile after having to trawl through the abomination that is my coursework (and you have to
+do it twice because I separated it into two branches).

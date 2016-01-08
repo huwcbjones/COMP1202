@@ -1,0 +1,10 @@
+zoo:
+steak:50
+fruit:60
+enclosure:50
+fruit:50
+steak:5
+celery:10
+chimpanzee:M,6,9
+chimpanzee:F,5,8
+playZookeeper:

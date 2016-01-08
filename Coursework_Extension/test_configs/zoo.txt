@@ -1,0 +1,8 @@
+steak:50
+zoo:
+hay:30
+enclosure:50
+steak:50
+hay:30
+icecream:45
+lion:f,3,8
